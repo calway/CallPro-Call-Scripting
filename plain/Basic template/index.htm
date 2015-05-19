@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Plain - basic template</title>
+
+</head>
+<body>
+    <h1>Campagne - <label id="script_sys_campaignname">[CAMPAGNE]</label></h1>
+    <h2>Gegevens</h2>
+    Geslacht <select size="1" name="script_name_gender">
+                <option value="">-- keuze --</option>
+                <option value="M">Man</option>
+                <option value="V">Vrouw</option>
+             </select><br/>
+    Voornaam <input type="text" name="script_name_first" /><br/>
+    Achternaam <input type="text" name="script_name_last" /><br/>
+    Adres <input type="text" name="script_addr_street" /> <input type="text" name="script_addr_number" /><br/>
+    Postcode <input type="text" name="script_addr_zip" /><br/>
+    Plaats <input type="text" name="script_addr_city" /><br/>
+    Telefoon <input type="text" name="script_telnr" /><br/>
+    <h2>Introductie</h2>
+    <p>Goedenavond, u spreekt met <label id="script_sys_agentname">[AGENT]</label> van <strong>Groene koffie</strong>. Komt het gelegen dat ik u bel? </p>
+    <h3>Ja</h3>
+    <p>
+       Dat is mooi. Ik bel u omdat wij een speciale aanbieding hebben voor nieuwe klanten van onze milieuvriendelijke <strong>Groene koffie</strong>.  
+    </p>
+    <p>
+       ...sales pitch...
+    </p>
+    <a href="#SCRIPT_SELECTSTAT?STATCODE=700">Verkoop</a>
+    <h3>Nee</h3>
+    <p>Dat is jammer om te horen. Op welk tijdstip kan ik bereiken dat het wel schikt? <i>We hebben een hele mooie aanbieding waar ik u graag iets meer over vertel</i></p>
+    <a href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK">Maak een terugbelafspraak</a><br/>
+    <a href="#SCRIPT_SELECTSTAT?STATCODE=500">Nee, ik heb geen interesse</a></br>
+        
+</body>
+</html>
