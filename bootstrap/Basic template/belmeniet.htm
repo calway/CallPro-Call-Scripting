@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bel me niet - vastlegging</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <!-- Download from https://github.com/aFarkas/html5shiv -->
+    <script src="js/html5shiv.min.js"></script>
+    <!-- Download from https://github.com/scottjehl/Respond -->
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/CallPro.Scripting.js"></script>
+    <script type="text/javascript">
+    //
+    // DEZE FUNCTIE zorgt ervoor dat er een record in de RegDoNotCall tabel wordt toegevoegd zoals de IVR dit ook zou doen
+    // waardoor de standaard Bel-me-niet export deze gegevens normaal meeneemt. Ik verzamel de verschillende velden uit de
+    // scriptvelden, dus zorg ervoor dat de volgende scriptvelden op de pagina staan (danwel deze pagina, danwel een van de include's)
+    //
+    // script_telnr, script_addr_zip, script_addr_number
+    //
+    // Daarnaast gebruikt deze functie nog enkele velden die niet script gebonden zijn (dus geen script_ ervoor hebben,
+    // maar alleen in deze pagina staan zodat we de informatie die de agent invult kunnen overnemen.
+    //
+    // 18-04-2012: Let op het streepje blijft in het telnr staan dus de bmnr export moet die verwijderen!!!
+    function bmnrvv_manual() {
+        if ((getFieldValue(BMN_Manual) == "J") || (getFieldValue(RVV_Manual) == "J")) {
+            var lcNotice = "De klant eist dat hij/zij direct door ons wordt afgemeld voor ";
+            if ((getFieldValue(BMN_Manual) == "J") && (getFieldValue(RVV_Manual) != "J")) {
+                lcNotice = lcNotice + "Bel-me-niet ";
+            }
+            if ((getFieldValue(BMN_Manual) != "J") && (getFieldValue(RVV_Manual) == "J")) {
+                lcNotice = lcNotice + "Recht van Verzet ";
+            }
+            if ((getFieldValue(BMN_Manual) == "J") && (getFieldValue(RVV_Manual) == "J")) {
+                lcNotice = lcNotice + "Bel-me-niet en Recht van Verzet ";
+            }
+            lcNotice = lcNotice + "en wil niet naar het bandje worden doorverbonden?";
+
+            if (confirm(lcNotice)) {
+                var loServUtil = goCallPro.GetServUtil();
+                var loScript = goCallPro.GetScript();
+                var loEntry = loScript.GetEntry();
+                var loCallList = loScript.GetCallList();
+                var cSQL = "";
+                cSQL = cSQL + "insert into RegDoNotCall (clentryid, clid, adverteerderID, start, stop, hangup, telefoonNR, postcode, huisNR, ";
+                cSQL = cSQL + "RVV, auto, boeken, energie, financien, charit, esoterie, kranten, loterijen, telecom, postorder) ";
+                cSQL = cSQL + "values ( ";
+                cSQL = cSQL + loEntry.clentryID.toString() + ", " + loCallList.resID.toString() + ", ";
+                cSQL = cSQL + "'" + loCallList.AdverteerderID.toString() + "', ";
+                cSQL = cSQL + "getdate()" + ", " + "getdate()" + ", " + "getdate()" + ", ";
+                cSQL = cSQL + "'" + getFieldValue(script_telnr).substr(0, 15) + "', '" + left(getFieldValue(script_addr_zip), 4) + "', '" + getFieldValue(script_addr_number) + "', ";
+                if (getFieldValue(RVV_Manual) == "J") {
+                    cSQL = cSQL + "1, ";
+                } else {
+                    cSQL = cSQL + "0, ";
+                }
+                if (getFieldValue(BMN_Manual) == "J") {
+                    cSQL = cSQL + "1, " + "1, " + "1, " + "1, " + "1, " + "1, " + "1, " + "1, " + "1, " + "1";
+                } else {
+                    cSQL = cSQL + "0, " + "0, " + "0, " + "0, " + "0, " + "0, " + "0, " + "0, " + "0, " + "0";
+                }
+                cSQL = cSQL + ")";
+                lResult = loServUtil.SQLExec(null, cSQL);
+                loCallList = null;
+                loEnrty = null;
+                loScript = null;
+                loServUtil = null;
+                window.location = "#SCRIPT_SELECTSTAT?STATCODE=240&AUTOSELECT"
+            }
+        } else {
+            alert("Je moet eerst aangeven of de afmelding geldt voor Bel-me-niet en/of Recht van Verzet!");
+        }
+    }
+
+    function bmnr_transfer() {
+        var loScriptAction = goCallPro.GetScriptAction();
+        var loScriptParams = loScriptAction.CreateParams();
+        var lcCommand = "SCRIPT_REGDONOTCALL";
+        var llResult = loScriptAction.ExecCommand(lcCommand, loScriptParams);
+        loScriptAction = null;
+        loScriptParams = null;
+        return llResult;
+    }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="#bs-menu-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.htm">Home</a></li>
+                    <li class="active"><a href="belmeniet.htm">Bel-me-niet</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <h1>Bel-me-niet doorschakeling</h1>
+        <blockquote>
+            <p>Alleen de knop om ergens op te nemen op de belscript pagina's.</p>
+            <p><a class="btn btn-primary" href="javascript:bmnr_transfer();">Ophangen naar Bel-me-niet</a></p>
+        </blockquote>
+        <h1>Belscript tekst + vastlegging en direct afmelden</h1>
+        <blockquote>
+            <p>
+                Extra uitleg en de tekst die agenten moeten zeggen. Belscript veld waarmee de agent moet aanvinken of hij het heeft gezegd.
+                Dit veld kan later worden gebruikt als blijkt uit de gespreksopname dat hij/zij dit toch niet heeft gedaan. Alternatief kan er
+                ook een controle op de button worden geplaatst zodat alleen kan worden doorgeschakeld als het vinkje is gezet.
+            </p>
+        </blockquote>
+        <h3>Recht van Verzet en Bel-me-niet</h3>
+        <blockquote>
+            <p>Ik wil u graag wijzen op uw rechten in de telemarketing. Als u nog even aan de lijn blijft, wordt u door middel van een bandje het recht van verzet en het bel-me-niet register aangeboden.</p>
+            <input type="checkbox" name="script_naleving_bmn" value="J" /> Ja ik heb de aankondiging van de IVR volledig en exact gedaan<br />
+            <p><a class="btn btn-primary" onclick="bmnr_transfer();">Ophangen naar Bel-me-niet</a></p>
+        </blockquote>
+        <h1>Directe afmelding vanuit het belscript</h1>
+        <blockquote>
+            <p>
+                Een extra stuk dat wordt aangeraden om ook op te nemen waarmee de agent direct vanuit het belscript zonder tussenkomst
+                van de IVR de afmelding kan vastleggen. Op deze manier blijft wel de bel-me-niet export behouden.
+            </p>
+        </blockquote>
+        <blockquote>
+            <p>
+                Als de persoon erop staat direct te worden afgemeld voor alle communicatie via Bel-me-niet en/of Recht-van-verzet
+                en duidelijk weigert om dit zelf via het bandje te doen dan kun je via <a onclick="bmnrvv_manual();">deze link</a> de afmelding direct vastleggen.
+            </p>
+            <p>Geef eerst aan om welke afmelding(en) gaat het:</p>
+            <div class="form-group">
+                <input type="checkbox" value="J" name="BMN_Manual" /> Bel-me-niet <br/>
+                <input type="checkbox" value="J" name="RVV_Manual" /> Recht van Verzet 
+            </div>
+        </blockquote>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Download from http://jquery.com/download/ -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
