@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bel me niet - vastlegging</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <!-- Download from https://github.com/aFarkas/html5shiv -->
+    <script src="js/html5shiv.min.js"></script>
+    <!-- Download from https://github.com/scottjehl/Respond -->
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/CallPro.Scripting.js"></script>
+    <script type="text/javascript">
+    function blindtransfer(transfer_to)
+    {
+	    var transfer_telnr=document.getElementById(transfer_to).value;
+	    if(transfer_telnr > "")
+	    {
+		    window.location = "#script_transfer?TYPE=BLIND&CONTEXT=dialer-transfer&TARGET=" + transfer_telnr;
+	    }
+    }
+
+    function attendedtransfer(transfer_to) {
+        var transfer_telnr = document.getElementById(transfer_to).value;
+        if (transfer_telnr > "")
+        {
+            window.location = "#script_transfer?TYPE=ATTENDED&CONTEXT=dialer-transfer&TARGET=" + transfer_telnr;
+        }
+    }
+
+    </script>
+
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="#bs-menu-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.htm">Home</a></li>
+                    <li><a href="belmeniet.htm">Bel-me-niet</a></li>
+                    <li class="active"><a href="calltransfer.htm">Doorverbinden</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">        
+        <h1>Direct doorverbinden</h1>
+        <blockquote>
+            <p>
+                Direct doorverbinden (zonder ruggespraak). Dit wordt ook wel een blind-transfer genoemd. Het gesprek wordt direct
+                doorgeschakeld naar het opgegeven nummer. De Agent komt in de Wrapup fase.
+            </p>
+            Doorverbinden naar <input type="text" id="blindtransfer_to" />
+            <p><a class="btn btn-primary" href="javascript:blindtransfer('blindtransfer_to');">Direct doorverbinden</a></p>
+        </blockquote>
+
+        <h1>Doorverbinden met ruggespraak</h1>
+        <blockquote>
+            <p>
+                Doorverbinden met ruggespraak. Dit wordt ook wel een attended-transfer genoemd. Het actieve gesprek wordt geparkeerd
+                en de Agent belt het opgegeven nummer. Na ruggespraak kan de Agent het gesprek doorverbinden, of afbreken. In het geval 
+                van afbreken krijgt de Agent het actieve gesprek terug. 
+            </p>
+            Doorverbinden naar <input type="text" id="attendedtransfer_to" />
+            <p>
+                <a class="btn btn-primary" href="javascript:attendedtransfer('attendedtransfer_to');">Direct starten</a>
+                <a class="btn btn-primary" href="#SCRIPT_TRANSFER?TYPE=COMPLETE">Doorverbinden voltooien</a>
+                <a class="btn btn-primary" href="#SCRIPT_TRANSFER?TYPE=ABORT">Doorverbinden afbreken</a>
+            </p>
+        </blockquote>
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Download from http://jquery.com/download/ -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
