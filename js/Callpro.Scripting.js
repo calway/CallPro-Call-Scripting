@@ -1,4 +1,4 @@
-// CallPro script library (C)opyright 2014 Calway Nederland b.v.
+// CallPro script library (C)opyright 2014-2015 Calway Nederland b.v.
 // v20140612
 // interface:
 //
