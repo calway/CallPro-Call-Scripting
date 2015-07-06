@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Terugbelafspraak</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <!-- Download from https://github.com/aFarkas/html5shiv -->
+    <script src="js/html5shiv.min.js"></script>
+    <!-- Download from https://github.com/scottjehl/Respond -->
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/CallPro.Scripting.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="#bs-menu-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.htm">Home</a></li>
+                    <li><a href="belmeniet.htm">Bel-me-niet</a></li>
+                    <li><a href="calltransfer.htm">Doorverbinden</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <h2>Terugbelafspraak</h2>
+        <p>Dat is jammer dat het nu niet gelegen komt. Wanneer kan ik u terugbellen? </p>
+        <h3>Terugbelafspraak standaard</h3>
+        <p>Klik de button en kies een datum/tijd in het standard dialoogvenster van CallPro.</p>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK">Maak een terugbelafspraak</a>
+
+        <h3>Terugbelafspraak standaard</h3>
+        <p>
+            Nu geven we in het script een aantal opties en omzeilen het dialoogvenster. Het is ook mogelijk om de opgegeven waarde als standaard waarde te gebruiken in het standaard dialoogvenster.
+        </p>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK&CALLBACKEXPR=DateAdd=1d,Time=19:00&AUTOSELECT">Morgen om 19:00 (direct)</a><br/>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK&CALLBACKEXPR=DateAdd=1d,Time=19:00,TimeFrame=240m,TimeFrameStart=18:00">Alleen in de avond tussen 18:00 en 22:00 (direct)</a><br/>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK&CALLBACKEXPR=ReadOnly=1,DateAdd=1d,Time=19:0,TimeFrame=240m,TimeFrameStart=18:0,CallBackDays=16">Alleen op Donderdagavond (niet aanpasbaar, niet direct)</a><br/>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCAT=CALLBACK&MINCALLBACKEXPR=ReadOnly=1,DateAdd=1m&CALLBACKEXPR=DateAdd=2m,Time=18:0">Over 2 maand om 18:00, minimaal over 1 maand</a><br/>
+
+        <h3>Terugbelafspraak via keuze in script</h3>
+        <p>
+            Het is ook mogelijk om via een jquery-ui control een datum te kiezen en deze door te geven aan CallPro. Formaat YYYY-MM-DD
+        Voor meer informatie kijk op <a href="http://jqueryui.com/datepicker/">jQuery-ui Datepicker documentatie</a></p>
+        <div class="row">
+            <div class="col-md-2">Terugbeldatum</div>
+            <div class="col-md-2">
+                <input id="CallBackDate" class="form-control" type="text" />
+            </div>
+            <div class="col-md2">
+                <a class="btn btn-primary" onclick="window.location='#SCRIPT_SELECTSTAT?STATCAT=CALLBACK&CALLBACKEXPR=ReadOnly=1,Date='+getFieldValue(CallBackDate)">Terugbelafspraak voor gekozen datum</a>
+            </div>
+        </div>        
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Download from http://jquery.com/download/ -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Initialize plugin behaviour -->
+    <script>
+        $(function () {
+            $("#CallBackDate").datepicker({
+                dateFormat: "yy-mm-dd",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                minDate: 0
+            });
+
+        });
+    </script>
+
+</body>
+</html>
