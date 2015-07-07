@@ -26,104 +26,169 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="#bs-menu-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="index.htm">Home</a></li>
-                <li><a href="belmeniet.htm">Bel-me-niet</a></li>
-                <li><a href="calltransfer.htm">Doorverbinden</a></li>
-            </ul>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.htm">Home</a></li>
+                    <li><a href="belmeniet.htm">Bel-me-niet</a></li>
+                    <li><a href="calltransfer.htm">Doorverbinden</a></li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Belopdracht<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>Bellijst: <label id="script_sys_calllistname">Bellijst</label></li>
+                            <li>EntryID: <label id="script_sys_clentryid">EntryID</label></li>
+                            <li>Status: <label id="script_sys_callstatusname">Status</label></li>
+                            <li>Agent: <label id="script_sys_oentry_ocallbackagentname">Terugbel agent</label></li>
+                        </ul>
+                    </li>
+                    <li class="alert-success"><a href="#SCRIPT_DIAL">Bel nummer</a></li>
+                    <li class="alert-danger"><a href="#SCRIPT_HANGUP">Ophangen</a></li>
+                </ul>
             </div>
         </div>
     </nav>
     <div class="container-fluid">
-    <h2>Gegevens</h2>
-    <div class="form-inline">
+        <h2>Gegevens</h2>
+        <div class="form-inline">
+            <div class="row">
+                <div class="col-md-4">
+                    Geslacht
+                </div>
+                <div class="col-md-8">
+                    <select class="form-control" size="1" name="script_name_gender">
+                        <option value="">-- keuze --</option>
+                        <option value="M">Man</option>
+                        <option value="V">Vrouw</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Voornaam
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="30" name="script_name_first" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Achternaam
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="30" name="script_name_last" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Adres
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="30" name="script_addr_street" /> <input class="form-control" type="text" size="10" name="script_addr_number" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Postcode
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="10" name="script_addr_zip" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Plaats
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="30" name="script_addr_city" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Telefoon
+                </div>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" size="10" name="script_telnr" />
+                </div>
+            </div>
+        </div>
+        <h2>Introductie</h2>
+        <p>Goedenavond, u spreekt met <label id="script_sys_agentname">[AGENT]</label> van <strong>Groene koffie</strong>. Komt het gelegen dat ik u bel? </p>
+        <h3>Ja</h3>
+        <p>
+            Dat is mooi. Ik bel u omdat wij een speciale aanbieding hebben voor nieuwe klanten van onze milieuvriendelijke <strong>Groene koffie</strong>.
+        </p>
+        <p>
+            <kbd>...sales pitch...</kbd>
+        </p>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=700">Verkoop</a>
+        <h3>Nee</h3>
+        <p>Dat is jammer om te horen. Op welk tijdstip kan ik bereiken dat het wel schikt? <i>We hebben een hele mooie aanbieding waar ik u graag iets meer over vertel</i></p>
+        <a class="btn btn-primary" href="callback.htm">Maak een terugbelafspraak</a>
+        <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=500">Nee, ik heb geen interesse</a>
+    </div>
+
+    <div class="container-fluid">
+        <h2>Status blok</h2>
+        <p>
+            Het is heel eenvoudig om een aantal knoppen te plaatsen die specifieke resultaten vastleggen. Dit kan met direct links, of via javascript functies.
+            Dat laatste wordt gebruikt als er extra controles of acties nodig zijn voordat wordt afgecodeerd.
+        </p>
         <div class="row">
             <div class="col-md-4">
-                Geslacht            
+                <h3>Geen contact</h3>
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=120">120-Geen gehoor</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=130">130-In gesprek</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=140">140-Niet gelegen</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=150">150-Beslisser afwezig</a><br />
             </div>
-            <div class="col-md-8">
-                <select class="form-control" size="1" name="script_name_gender">
-                    <option value="">-- keuze --</option>
-                    <option value="M">Man</option>
-                    <option value="V">Vrouw</option>
+            <div class="col-md-4">
+                <h3>Niet meer bellen</h3>
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=231">231-Dubbel in bestand</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=299">299-Niet bereikbaar voor einde belperiode</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=551">551-Is geen donateur (meer)</a><br />
+
+                <!-- Voorbeeld met javascript controle. Deze functie kan ook generieker gemaakt worden door als parameter 
+                    de resultaatcode mee te geven die moet worden gebruikt om af te coderen. Je hebt dan maar 1 controle functie 
+                    die de diverse controles centraal in een funtie verzameld. -->
+                <script type="text/javascript">
+                    function Check510() {
+                        if (getFieldValue("script_reden") == "") {
+                            alert("Kies eerst een reden!");
+                        }
+                        else {
+                            window.location = "#SCRIPT_SELECTSTAT?STATCODE=510";
+                        }
+                    }
+                </script>
+                <a class="btn btn-primary" href="javascript:Check510()">510-Geen interesse</a>
+                <select class="form-control" name="script_reden">
+                    <option value="">-- Kies een reden --</option>
+                    <option value="1">Drinkt geen koffie</option>
+                    <option value="2">Is tevreden met huidige merk</option>
+                    <option value="2">Wil niet telefonisch bestellen</option>
                 </select>
+                <br />
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-4">
-                Voornaam            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="30" name="script_name_first" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                Achternaam            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="30" name="script_name_last" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                Adres            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="30" name="script_addr_street" /> <input class="form-control" type="text" size="10" name="script_addr_number" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                Postcode            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="10" name="script_addr_zip" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                Plaats            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="30" name="script_addr_city" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                Telefoon            
-            </div>
-            <div class="col-md-8">
-                <input class="form-control" type="text" size="10" name="script_telnr" />
+                <h3>Definitief onbereikbaar</h3>
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=200&AUTOSELECT">200-Informatietoon/Afgesloten telefoon (direct)</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=232">232-Verhuisd adres onbekend</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=210">210-Overleden</a><br />
+                <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=230">230-Telefoon en naam kloppen niet met elkaar</a><br />
             </div>
         </div>
     </div>
-    <h2>Introductie</h2>
-    <p>Goedenavond, u spreekt met <label id="script_sys_agentname">[AGENT]</label> van <strong>Groene koffie</strong>. Komt het gelegen dat ik u bel? </p>
-    <h3>Ja</h3>
-    <p>
-       Dat is mooi. Ik bel u omdat wij een speciale aanbieding hebben voor nieuwe klanten van onze milieuvriendelijke <strong>Groene koffie</strong>.  
-    </p>
-    <p>
-       <kbd>...sales pitch...</kbd>
-    </p>
-    <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=700">Verkoop</a>
-    <h3>Nee</h3>
-    <p>Dat is jammer om te horen. Op welk tijdstip kan ik bereiken dat het wel schikt? <i>We hebben een hele mooie aanbieding waar ik u graag iets meer over vertel</i></p>
-    <a class="btn btn-primary" href="callback.htm">Maak een terugbelafspraak</a>
-    <a class="btn btn-primary" href="#SCRIPT_SELECTSTAT?STATCODE=500">Nee, ik heb geen interesse</a>
-    </div>
-    
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Download from http://jquery.com/download/ -->
     <script src="js/jquery.min.js"></script>
@@ -131,4 +196,5 @@
     <script src="js/bootstrap.min.js"></script>
 
 </body>
+
 </html>
