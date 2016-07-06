@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bingmaps</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <!-- Download from https://github.com/aFarkas/html5shiv -->
+    <script src="js/html5shiv.min.js"></script>
+    <!-- Download from https://github.com/scottjehl/Respond -->
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/CallPro.Scripting.js"></script>
+    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+    <script>
+        var map = null;
+        var searchManager = null;
+
+        function jInit()
+        {
+            getMap();
+            
+        }
+
+        function getMap()
+        {
+            map = new Microsoft.Maps.Map(document.getElementById("bingMap"),
+                {
+                    credentials: 'Your bing maps key'
+                    , showDashboard: false
+                    , enableClickableLogo: false
+                    , enableSearchLogo: false
+                    , showScalebar: false
+                    , showCopyright: false
+                });
+        }
+        function createSearchManager() 
+        {
+            map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(map)); 
+            searchManager = map.getComponent('searchManager'); 
+        }
+        function LoadSearchModule()
+        {
+            Microsoft.Maps.loadModule('Microsoft.Maps.Search', { callback: geocodeRequest });
+        }
+
+        function geocodeRequest()
+        {
+            createSearchManager(); 
+            var where = getFieldValue("script_addr_street") + " " + getFieldValue("script_addr_number") + ", " + getFieldValue("script_addr_zip") + ", " + getFieldValue("script_addr_city") + ", Nederland";
+            var userData = { name: where, id: 'XYZ' }; 
+            var request = 
+            { 
+                where: where, 
+                count: 5, 
+                bounds: map.getBounds(), 
+                callback: onGeocodeSuccess, 
+                errorCallback: onGeocodeFailed
+            }; 
+            searchManager.geocode(request); 
+
+        }
+        function onGeocodeSuccess(result, userData) 
+        { 
+            if (result) { 
+                map.entities.clear(); 
+                var topResult = result.results && result.results[0]; 
+                if (topResult) { 
+                    var pushpin = new Microsoft.Maps.Pushpin(topResult.location, null); 
+                    map.setView({ center: topResult.location, zoom: 10 }); 
+                    map.entities.push(pushpin); 
+                } 
+            } 
+        } 
+        function onGeocodeFailed(result, userData) { 
+            alert('Geocode failed'); 
+        } 
+
+    </script>
+</head>
+<body onload="jInit();">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-menu-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><label id="script_sys_campaignname">[CAMPAGNE]</label></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="#bs-menu-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.htm">Home</a></li>
+                    <li class="active"><a href="bingmaps.htm">Bingmaps</a></li>
+                    <li><a href="belmeniet.htm">Bel-me-niet</a></li>
+                    <li class="active"><a href="calltransfer.htm">Doorverbinden</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <h1>Bingmaps koppelen aan scriptvelden</h1>
+        <p>De bingmaps code is overgenomen uit het voorbeeld <a href="https://www.bingmapsportal.com/ISDK/AjaxV7#SearchModule2">Find location by address</a> op de Bingmaps dev center website.</p>
+        <h2>Gegevens</h2>
+        <div class="form-inline">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            Adres
+                        </div>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" size="30" name="script_addr_street" /> <input class="form-control" type="text" size="10" name="script_addr_number" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            Postcode
+                        </div>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" size="10" name="script_addr_zip" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            Plaats
+                        </div>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" size="30" name="script_addr_city" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-primary" href="javascript:LoadSearchModule();">Zoek</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="bingMap" style="position: relative; width:384px;height:384px;"></div>
+                            <div id="bingResultInfo"></div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Download from http://jquery.com/download/ -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
