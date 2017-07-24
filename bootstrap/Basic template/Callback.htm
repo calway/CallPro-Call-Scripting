@@ -9,8 +9,8 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="css/jquery-ui.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -64,8 +64,8 @@
 
         <h3>Terugbelafspraak via keuze in script</h3>
         <p>
-            Het is ook mogelijk om via een jquery-ui control een datum te kiezen en deze door te geven aan CallPro. Formaat YYYY-MM-DD
-        Voor meer informatie kijk op <a href="http://jqueryui.com/datepicker/">jQuery-ui Datepicker documentatie</a></p>
+            Het is ook mogelijk om via een datepicker control een datum te kiezen en deze door te geven aan CallPro. Formaat YYYY-MM-DD
+        Voor meer informatie kijk op <a href="https://uxsolutions.github.io/bootstrap-datepicker">Bootstrap Datepicker documentatie</a></p>
         <div class="row">
             <div class="col-md-2">Terugbeldatum</div>
             <div class="col-md-2">
@@ -80,17 +80,18 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Download from http://jquery.com/download/ -->
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.min.js"></script>
     <!-- Initialize plugin behaviour -->
     <script>
         $(function () {
             $("#CallBackDate").datepicker({
-                dateFormat: "yy-mm-dd",
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                minDate: 0
+                format: "yyyy-mm-dd",
+                language: "nl",
+                maxViewMode: 1,
+                calendarWeeks: true,
+                autoclose: true,
             });
 
         });
