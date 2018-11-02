@@ -21,7 +21,7 @@
     <!--[endif]-->
 
     <script src="js/CallPro.Scripting.js"></script>
-    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+    <script type="text/javascript" src="http://www.bing.com/api/maps/mapcontrol"></script>
     <script>
         var map = null;
         var searchManager = null;
@@ -29,37 +29,40 @@
         function jInit()
         {
             getMap();
-            
         }
 
         function getMap()
         {
-            map = new Microsoft.Maps.Map(document.getElementById("bingMap"),
-                {
-                    credentials: 'Your bing maps key'
-                    , showDashboard: false
-                    , enableClickableLogo: false
-                    , enableSearchLogo: false
-                    , showScalebar: false
-                    , showCopyright: false
-                });
+            map = new Microsoft.Maps.Map("#bingMap",
+			{
+				credentials: 'Your bing maps key'
+				, showDashboard: false
+				, enableClickableLogo: false
+				, enableSearchLogo: false
+				, showScalebar: false
+				, showCopyright: false
+			});
+			if(!map)
+				alert("Map");
         }
-        function createSearchManager() 
-        {
-            map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(map)); 
-            searchManager = map.getComponent('searchManager'); 
-        }
-        function LoadSearchModule()
-        {
-            Microsoft.Maps.loadModule('Microsoft.Maps.Search', { callback: geocodeRequest });
-        }
+		function Search() {
+			if (!searchManager) {
+				//Create an instance of the search manager and perform the search.
+				Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+					searchManager = new Microsoft.Maps.Search.SearchManager(map);
+					Search()
+				});
+			} else {
+
+				geocodeRequest();
+			}
+		}		
 
         function geocodeRequest()
         {
-            createSearchManager(); 
             var where = getFieldValue("script_addr_street") + " " + getFieldValue("script_addr_number") + ", " + getFieldValue("script_addr_zip") + ", " + getFieldValue("script_addr_city") + ", Nederland";
             var userData = { name: where, id: 'XYZ' }; 
-            var request = 
+            var searchRequest = 
             { 
                 where: where, 
                 count: 5, 
@@ -67,7 +70,7 @@
                 callback: onGeocodeSuccess, 
                 errorCallback: onGeocodeFailed
             }; 
-            searchManager.geocode(request); 
+            searchManager.geocode(searchRequest); 
 
         }
         function onGeocodeSuccess(result, userData) 
@@ -144,7 +147,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <a class="btn btn-primary" href="javascript:LoadSearchModule();">Zoek</a>
+                            <a class="btn btn-primary" href="javascript:Search();">Zoek</a>
 
                         </div>
                     </div>
