@@ -4,3 +4,4 @@ We beginnen met enkele basis voorbeelden en voegen gaandeweg extra voorbeelden t
 Als er specifieke vragen/verzoeken zijn kunnen die worden gesteld via de Issues. 
 We zullen dan proberen een voorbeeld toe te voegen van die specifieke situatie.
 
+Zie voor meer uitleg en guides de [wiki](wiki)
