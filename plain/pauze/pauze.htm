@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=11" />
+<title>PAUZE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" href="css/Envision/Envision.css" type="text/css" />
+<script src="include/Callpro.Scripting.js" type="text/javascript"></script>
+<script src="include/Callpro.Scripting.Support.js" type="text/javascript"></script>
+<script src="include/Lib-Custom.js" type="text/javascript"></script>
+<script type="text/javascript" src="include/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+// veilige methode voor zichtbaar maken panels, ook als deze niet bestaan.
+// Ik moet toch maar eens javascript gaan leren
+function jqueryShow(cID) {
+    $("#N" + cID).show();
+}
+function jqueryHide(cID) {
+    $("#N" + cID).hide();
+}
+</script>
+<script type="text/javascript">
+    function RefreshCallPro()
+    {
+        if(confirm("Wilt u de campagne-lijst weergave verversen?") == true) {
+            // Refresh CallPro structures
+            var loResFactory = goCallPro.GetResourceFactory();
+            loResFactory.ResReQuery();
+            // Reload page
+            window.location = "pauze.htm";
+        }
+    }
+
+    function ToggleShortCut(cID,oField)
+    {
+        var loScript = goCallPro.GetScript();
+        var loAgent=loScript.GetAgent();
+        for(var i=1; i<=loAgent.ShortCutsCount; i++)
+        {
+            var loShortCut=loAgent.ShortCuts(i);
+            if(loShortCut.ResID == cID) {
+                loShortCut.ResEnabled = oField.checked;
+                if(loShortCut.ResEnabled) {
+                    jqueryShow(cID);
+                } else {
+                    jqueryHide(cID);
+                }
+                loShortCut.Save();
+            }
+            var loShortCut = null;
+        }
+    }
+
+
+    function Init() {
+        var loScript = goCallPro.GetScript();
+        var loResFactory = goCallPro.GetResourceFactory();
+        if (loScript.GetAgent() != null) {
+            var loAgent = loScript.GetAgent();
+            // Seems we don't need these two lines anymore (08-06-2020)
+            // loAgent.Free();
+            // loAgent.RequerySessions();
+            //
+            // Get the global call center notes
+            //
+            lcGlobalNotes = "";
+            lcGlobalNotes = lcGlobalNotes + GetCampaignNotesTable("", -5);
+            oGlobalNotes.innerHTML = lcGlobalNotes;
+
+            //
+            // Toon de gekoppelde campagnes
+            //
+            var now = new Date();
+            cCampaignList = "Weergave van " + now.toString() + ":<BR>";
+            // LET OP! Koppelingen in campagnes naar resource-groepen worden niet ondersteund!!!!!
+            // Alleen Koppelingen naar Campagnes en Agent-groepen.
+            for (var i = 1; i <= loAgent.ShortCutsCount; i++) {
+                var loShortCut = loAgent.ShortCuts(i);
+                cCampaignNote = "";
+                cCampaignList = cCampaignList + "<input name=\"C" + loShortCut.ResID.toString() + "\" type=checkbox value=1";
+                // BNK-01-04-2007: We willen alleen weergave van gekoppelde Campagnes, geen agent keuze mogelijkheid!
+                // cCampaignList = cCampaignList + " disabled "
+                if (loShortCut.ResEnabled) {
+                    cCampaignList = cCampaignList + " checked ";
+                }
+                cCampaignList = cCampaignList + " onclick='ToggleShortCut(" + loShortCut.ResID.toString() + ",C" + loShortCut.ResID.toString() + ")' ";
+                cCampaignList = cCampaignList + "";
+                cCampaignList = cCampaignList + ">";
+                cCampaignList = cCampaignList + "";
+                cCampaignList = cCampaignList + loShortCut.FromResource.ResShortPath;
+                cCampaignList = cCampaignList + "";
+                cCampaignList = cCampaignList + "<br/>\r\n";
+                if (loShortCut.FromResource.Restype == 2) {
+                    // We have a shortcut in a Campaign folder
+                    lcNotes = GetCampaignNotesTable("", loShortCut.FromResource.ResID);
+                } else {
+                    // Don't check Notes, we probably have an Agent-group folder
+                    lcNotes = "";
+                }
+                if (lcNotes > "") {
+                    cCampaignNote = cCampaignNote + "<div ID=\"N" + loShortCut.ResID.toString() + "\" style=\"display:";
+                    if (loShortCut.ResEnabled) {
+                        cCampaignNote = cCampaignNote + "inline";
+                    } else {
+                        cCampaignNote = cCampaignNote + "none";
+                    }
+                    cCampaignNote = cCampaignNote + "\">" + lcNotes + "</div>";
+                    cCampaignList = cCampaignList + cCampaignNote;
+                }
+                var loShortCut = null;
+            }
+            oCampaigns.innerHTML = cCampaignList;
+            //
+            // Toon de agent statistieken
+            //
+            oAgentStatistics.innerHTML = GetAgentStatisticsTodayTable("CAMPAIGNID", "");
+        }
+    }
+
+</script>
+</head>
+<body onload="Init()">
+<div id="wrap">
+  <div id="header">
+	<h1 id="logo-text">Werkplek <label id="script_sys_oSeat_Hostname">Hostname</label></h1>
+    <h2 id="slogan">toestel <label id="script_sys_oSeat_Extension">extension</label></h2>
+
+    <div id="header-links">
+      <p> <a href="#SCRIPT_BREAK">Pauze</a> | <a href="#SCRIPT_LOGOUT">Logout</a></p>
+    </div>
+  </div>
+  <div id="menu">
+    <ul>
+    <li id="oAgentPauzeAlert"></li>
+    <li><a href="#SCRIPT_SUBSCRIBE?DIALMODE=OUTBOUND&AUTOSELECT">Start bellen</a></li>
+    <li class="last"><a href="javascript:RefreshCallPro()">Campagnelijst verversen</a></li>
+    </ul>
+
+  </div>
+  
+  <div id="content-wrap">
+    <div id="sidebar">
+    
+<h1>Campagne statistieken</h1>
+<div id="oAgentStatistics"></div>
+<h1>Contact center notities</h1>
+<div id="oGlobalNotes"></div>
+
+    </div>
+
+<div id="main">
+<p><b>Welkom <label id="script_sys_oAgent_Name">script_sys_oAgent_Name</label>,</b></p>
+<p>In de onderstaande lijst staan de campagnes die door supervisie zijn klaargezet. Als je denkt 
+dat de actieve campagnes verkeerd zijn meldt dit dan bij de supervisor 
+voordat je gaat bellen. Indien nodig schakelt de supervisor je over op een campagne 
+met meer prioriteit:</p>
+<div id="oCampaigns"></div>
+
+  </div>
+  </div>
+  <div id="footer">
+    <p>Klant: <strong>CALWAY</strong> | Belscript door: <a href="#http://www.callpro.nl">
+        Calway</a> | Ontwerp van: <a href="#http://www.styleshout.com/">styleshout</a></p>
+  </div>
+</div>
+</body>
+</html>
+
+
